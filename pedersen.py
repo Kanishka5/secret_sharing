@@ -48,27 +48,30 @@ def power(x, y, z):
 
 # get 'g' a generator
 def getGenerators(n):
-    order = 0
-    for i in range(n):
+    for i in range(n-1, 1, -1):
         if (gcd(i, n) == 1):
-            order += 1
-    for i in range(n):
-        if (gcd(i, n) == 1):
-            temp = 1
-            first = -1
-            val = -2
-            while(1):
-                if (first == -1):
-                    first = power(i, temp, n)
-                else:
-                    val = power(i, temp, n)
+            return i
+    # order = 0
+    # for i in range(n):
+    #     if (gcd(i, n) == 1):
+    #         order += 1
+    # for i in range(n):
+    #     if (gcd(i, n) == 1):
+    #         temp = 1
+    #         first = -1
+    #         val = -2
+    #         while(1):
+    #             if (first == -1):
+    #                 first = power(i, temp, n)
+    #             else:
+    #                 val = power(i, temp, n)
 
-                if(val == first):
-                    temp -= 1
-                    if(temp == order):
-                        return i
-                    break
-                temp += 1
+    #             if(val == first):
+    #                 temp -= 1
+    #                 if(temp == order):
+    #                     return i
+    #                 break
+    #             temp += 1
 
 
 # cal h
@@ -144,7 +147,9 @@ def reconstructSecret(shares, k):
 
 if __name__ == "__main__":
     # calc p,q
-    p, q = getPrimes(16)
+    # p, q = getPrimes(16)
+    p = -1
+    q = number.getPrime(1024)
     # calc g
     g = getGenerators(q)
     # cal h

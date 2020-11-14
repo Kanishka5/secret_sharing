@@ -1,7 +1,7 @@
 import random
+import time
 from math import ceil, gcd
 from decimal import Decimal
-from Crypto.Util import number
 
 global g, h, p, q
 
@@ -17,39 +17,6 @@ def power(x, y, z):
             res = (res * x) % z
         y = y >> 1
         x = (x * x) % z
-    return res
-
-
-# get 'g' a generator
-def getGenerators(n):
-    order = 0
-    for i in range(n):
-        if (gcd(i, n) == 1):
-            order += 1
-    for i in range(n):
-        if (gcd(i, n) == 1):
-            temp = 1
-            first = -1
-            val = -2
-            while(1):
-                if (first == -1):
-                    first = power(i, temp, n)
-                else:
-                    val = power(i, temp, n)
-
-                if(val == first):
-                    temp -= 1
-                    if(temp == order):
-                        return i
-                    break
-                temp += 1
-
-
-# cal h
-def getHval(g, n):
-    res = g
-    while(res == g):
-        res = random.randrange(0, q)
     return res
 
 
@@ -70,9 +37,8 @@ def calcY(x, coeffs, k):
 
 
 # split secret between shareholders
-def generateShares(coeffsS, coeffsT, shareno, k):
+def generateShares(coeffsS, coeffsT, k, x):
     # only 1 share genrated
-    x = random.getrandbits(128)
     return calcY(x, coeffsS, k), calcY(x, coeffsT, k)
 
 
@@ -93,37 +59,24 @@ def sharedCommit(coeffsS, coeffsT, k):
 def verifySecret(s, t, sharedCommit, i):
     currCommit = commitment(s, t) % q
     combCommit = (sharedCommit[0] * (power(sharedCommit[1], i, q))) % q
-    print(currCommit, combCommit)
+    # print(currCommit, combCommit)
     return currCommit == (combCommit)
-
-
-# reconstruct secret
-def reconstructSecret(shares, k):
-    x0, y0 = 1, shares[0][0]
-    x1, y1 = 2, shares[1][0]
-
-    numerator = ((x1 * y0) - (x0 * y1)) % q
-    denominator = (x1 - x0) % q
-    gensecret = numerator // denominator
-    return gensecret
 
 
 if __name__ == "__main__":
     # calc p,q
-    p= 2875240349 
-    q = 136319
+    # p = 2875240349
+    q = 160083459653027294572947538361142474693461858573551936926737179537830262185487287460372060800072797326040636201799277740168218919629285080416550852599849507880591377952261893937217490455277823851473372222317985032827403671415987326023409645117312652552473362242135660471225018078630032279914142026248951857619
     # calc g
-    g = getGenerators(q)
+    g = 160083459653027294572947538361142474693461858573551936926737179537830262185487287460372060800072797326040636201799277740168218919629285080416550852599849507880591377952261893937217490455277823851473372222317985032827403671415987326023409645117312652552473362242135660471225018078630032279914142026248951857618
     # cal h
-    h = getHval(g, q)
-    print("p,q,g,h values:")
-    print(p, q, g, h)
-    print("\n")
+    h = 4622164940323503878229125126763790441392467089381226534935353758227759798512707452963303817720328816545610697278405374421700833749651545466085820017114632564777590112132367806793222358332078082265829895090981485054499626286890474905993040926284567236051366034621783191089838512453483923770949371557572226013
 
+    codeStart = time.time()
     secret = random.getrandbits(128)
     print("The secret is: " + str(secret))
-    print("Number of shareholders: 2")
-    shareno = 2
+    # print("Number of shareholders: 2")
+    # shareno = 2
     print("The value of k: 2")
     k = 2
 
@@ -132,9 +85,10 @@ if __name__ == "__main__":
     coeffsT = coeff(k, random.getrandbits(128))
 
     # generate shares
-    s,t = generateShares(coeffsS, coeffsT, shareno, k)
+    x = random.getrandbits(128)
+    s, t = generateShares(coeffsS, coeffsT, k, x)
     print("Shares are:")
-    print(s,t)
+    print(s, t)
     print("\n")
 
     # genrate public commitments
@@ -144,5 +98,8 @@ if __name__ == "__main__":
     print("\n")
 
     # verify shares
-    print("Verification for shares: ",verifySecret(s, t, sharedCommits, 1))
+    print("Verification for shares: ", verifySecret(s, t, sharedCommits, x))
     print("\n")
+    codeEnd = time.time()
+
+    print("Execution time of code is: " + str(codeEnd - codeStart))

@@ -4,7 +4,7 @@ from decimal import Decimal
 from Crypto.Util import number
 
 global randsize, p
-p = number.getPrime(64)
+p = number.getPrime(1024)
 
 
 # calc random coeficient
