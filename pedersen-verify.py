@@ -74,10 +74,10 @@ if __name__ == "__main__":
 
     codeStart = time.time()
     secret = random.getrandbits(128)
-    print("The secret is: " + str(secret))
+    # print("The secret is: " + str(secret))
     # print("Number of shareholders: 2")
     # shareno = 2
-    print("The value of k: 2")
+    # print("The value of k: 2")
     k = 2
 
     # coefficient of s and t
@@ -87,19 +87,19 @@ if __name__ == "__main__":
     # generate shares
     x = random.getrandbits(128)
     s, t = generateShares(coeffsS, coeffsT, k, x)
-    print("Shares are:")
-    print(s, t)
-    print("\n")
+    # print("Shares are:")
+    # print(s, t)
+    # print("\n")
 
     # genrate public commitments
     sharedCommits = sharedCommit(coeffsS, coeffsT, k)
-    print("public comitments:")
-    print(sharedCommits)
-    print("\n")
+    # print("public comitments:")
+    # print(sharedCommits)
+    # print("\n")
 
     # verify shares
-    print("Verification for shares: ", verifySecret(s, t, sharedCommits, x))
-    print("\n")
+    # print("Verification for shares: ", verifySecret(s, t, sharedCommits, x))
+    # print("\n")
     codeEnd = time.time()
 
     print("Execution time of code is: " + str(codeEnd - codeStart))
